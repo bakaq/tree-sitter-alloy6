@@ -19,10 +19,13 @@ module.exports = grammar({
       field("names", $.name_list),
       optional(choice($.sig_extends, $.sig_in)),
       "{",
-      // TODO: fields
+      field("fields", optional($.field_list)),
       "}",
       // TODO: implicit fact block
     ),
+
+    abstract: _ => "abstract",
+    var: _ => "var",
 
     name_list: $ => $._name_list,
     _name_list: $ => choice(
@@ -40,19 +43,43 @@ module.exports = grammar({
       field("in_list", $.sig_in_list),
     ),
 
-    sig_in_list: $ => $._sig_in_list,
-    _sig_in_list: $ => seq(
+    sig_in_list: $ => seq(
       $.qualified_name,
       optional(repeat(seq("+", $.qualified_name))),
     ),
 
-    qualified_name: $ => seq(
-      // TODO: qualification
-      $.identifier,
+    field_list: $ => $._field_list,
+    _field_list: $ => seq(
+      choice(
+        $.field_declaration,
+        seq($.field_declaration, ",", $._field_list),
+      ),
+      optional(","),
     ),
-    
-    abstract: _ => "abstract",
-    var: _ => "var",
+
+    field_declaration: $ => seq(
+      optional($.var),
+      optional("disj"),
+      $.name_list,
+      ":",
+      optional("disj"),
+      $.expression,
+    ),
+
+    expression: $ => choice(
+      $.constant,
+      // TODO: All the rest
+    ),
+
+    constant: _ => choice(
+      choice(
+        seq("-", /[0-9]+/),
+        /-[0-9]+/,
+      ),
+      "none",
+      "univ",
+      "iden",
+    ),
 
     multiplicity: _ => choice(
       "one",
@@ -60,6 +87,13 @@ module.exports = grammar({
       "some"
     ),
 
+    qualified_name: $ => seq(
+      // TODO: qualification
+      $.identifier,
+    ),
+
     identifier: _ => /[a-zA-Z][a-zA-Z0-9_"]*/,
   },
+
+  conflicts: $ => [[$._field_list]],
 });
