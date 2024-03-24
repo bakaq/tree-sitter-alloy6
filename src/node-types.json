@@ -1,5 +1,20 @@
 [
   {
+    "type": "block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "constant",
     "named": true,
     "fields": {}
@@ -123,6 +138,10 @@
       "types": [
         {
           "type": "abstract",
+          "named": true
+        },
+        {
+          "type": "block",
           "named": true
         },
         {

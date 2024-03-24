@@ -11,4 +11,7 @@ sig A in B + C + D {}
 sig A {
     asdf: univ,
     fdas: none,
+} {
+    none
+    univ
 }

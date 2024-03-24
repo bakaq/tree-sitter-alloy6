@@ -21,7 +21,7 @@ module.exports = grammar({
       "{",
       field("fields", optional($.field_list)),
       "}",
-      // TODO: implicit fact block
+      optional($.block),
     ),
 
     abstract: _ => "abstract",
@@ -90,6 +90,12 @@ module.exports = grammar({
     qualified_name: $ => seq(
       // TODO: qualification
       $.identifier,
+    ),
+
+    block: $ => seq(
+      "{",
+      repeat($.expression),
+      "}",
     ),
 
     identifier: _ => /[a-zA-Z][a-zA-Z0-9_"]*/,
